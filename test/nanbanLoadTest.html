@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>FGeo: Tests</title>
+        <script src="../js/nanbanLoad.js"></script>
+
+    </head>
+    <body onload="unitTests()">
+        <script type="text/javascript">
+            var results = {
+                total : 0,
+                failed : 0,
+                passed : 0
+            };
+            function test(observed, expected) {
+
+                results.total++;
+
+                var result = observed;
+                if (result !== expected) {
+                    results.fail++;
+                    document.write("<p>Test : " + results.total + ": Failed Test: Expected " + expected + ", but result was : " + result + "</p>");
+                } else {
+                    results.pass++;
+                    document.write("<p>Test : " + results.total + ": Passed</p>");
+                }
+
+            }
+
+            function unitTests() {
+
+                var frnd = new Friend('1243', 'shankar');
+                // test isEmptyProperty()
+                test(frnd.isEmptyProperty(null), true);
+                test(frnd.getDetails(null).inError, false);
+            }
+
+        </script>
+    </body>
