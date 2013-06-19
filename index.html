@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Sign in &middot; Friend Locator</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Le styles -->
+        <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBygaxYMIaKk3M7QaVoNNn1odvcIjz01EE&sensor=true"></script>
+        <script type="text/javascript">
+            var geocoder;
+            var map;
+            function initialize() {
+                geocoder = new google.maps.Geocoder();
+                var mapOptions = {
+                    center : new google.maps.LatLng(32.7502, 6.1916),
+                    zoom : 3,
+                    mapTypeId : google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+            }
+
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+        <script src="js/nanbanLoad.js"></script>
+        <script src="js/nanbans.js"></script>
+
+        <style type="text/css">
+            html {
+                height: 100%;
+                padding: 0;
+            }
+            body {
+                height: 100%;
+            }
+
+            .option {
+
+                font-size: 1em;
+                font-style: oblique;
+                margin: auto auto auto;
+            }
+
+            .form-signin .form-signin-heading, .form-signin .checkbox {
+                margin-bottom: 10px;
+            }
+            .form-signin input[type="text"], .form-signin input[type="password"
+            ] {
+                font-size: 16px;
+                height: auto;
+                margin-bottom: 15px;
+                padding: 7px 9px;
+            }
+            #login {
+                max-width: 300px;
+                padding: 60px 29px 60px;
+                margin: auto auto auto auto;
+                alignment-adjust: central;
+                background-color: #fff;
+                border: 1px solid #e5e5e5;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            }
+
+            #fb-login {
+                padding: 10px auto auto;
+            }
+
+            .row-fluid {
+                height: 100%;
+                width: 100%;
+                padding: 0;
+            }
+            .span12 {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            #map-canvas {
+                height: 100%;
+                padding: 0;
+            }
+
+        </style>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="/lib/bootstrap/js/html5shiv.js"></script>
+        <![endif]-->
+
+    </head>
+    <!-- Place this asynchronous JavaScript just before your </body> tag -->
+    <script type="text/javascript">
+        (function() {
+            var po = document.createElement('script');
+            po.type = 'text/javascript';
+            po.async = true;
+            po.src = 'https://apis.google.com/js/client:plusone.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(po, s);
+        })();
+    </script>
+    <body>
+        <div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId : '126494412964', // App ID
+                    channelUrl : '//localhost:8020/EddaMock/channel.html', // Channel File
+                    status : true, // check login status
+                    cookie : true, // enable cookies to allow the server to access the session
+                    xfbml : true // parse XFBML
+                });
+
+                isLoggedIn = false;
+
+                FB.Event.subscribe('auth.authResponseChange', function(response) {
+                    if (response.status === 'connected') {
+                        $('#login').hide();
+
+                        loadFriends(function(status) {
+                            if (status !== "success") {
+                                console.log(status);
+                            }
+
+                        });
+
+                    } else if (response.status === 'not_authorized') {
+                        FB.login();
+                    } else {
+                        FB.login();
+                    }
+                });
+            };
+
+            // Load the SDK asynchronously
+            ( function(d) {
+                    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+                    if (d.getElementById(id)) {
+                        return;
+                    }
+                    js = d.createElement('script');
+                    js.id = id;
+                    js.async = true;
+                    js.src = "//connect.facebook.net/en_US/all.js";
+                    ref.parentNode.insertBefore(js, ref);
+                }(document));
+
+            // Here we run a very simple test of the Graph API after login is successful.
+            // This testAPI() function is only called in those cases.
+
+        </script>
+        <div id="login" align="center">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <hr />
+            <!--<span id="signinButton"> <span
+            class="g-signin"
+            data-callback="signinCallback"
+            data-clientid="413875717210.apps.googleusercontent.com"
+            data-cookiepolicy="single_host_origin"
+            data-requestvisibleactions="http://schemas.google.com/AddActivity"
+            data-scope="https://www.googleapis.com/auth/plus.login"> </span> </span>-->
+            <div id='fb-login'>
+                <fb:login-button show-faces="false" width="200" max-rows="5" ></fb:login-button>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function signinCallback(authResult) {
+                if (authResult['access_token']) {
+                    // Successfully authorized
+                    // Hide the sign-in button now that the user is authorized, for example:
+                    document.getElementById('signinButton').setAttribute('style', 'display: none');
+                    $('#login').hide();
+
+                } else if (authResult['error']) {
+                    // There was an error.
+                    // Possible error codes:
+                    //   "access_denied" - User denied access to your app
+                    //   "immediate_failed" - Could not automatically log in the user
+                    console.log('There was an error: ' + authResult['error']);
+                }
+            }
+        </script>
+
+        <div class="row-fluid">
+
+            <div class="span12">
+                <div id="map-canvas"></div>
+            </div>
+
+        </div>
+
+    </body>
+</html>
