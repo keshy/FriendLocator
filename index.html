@@ -11,7 +11,8 @@
         <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBygaxYMIaKk3M7QaVoNNn1odvcIjz01EE&sensor=true"></script>
+        <script src="js/parse-1.2.8.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<key>&sensor=true"></script>
         <script type="text/javascript">
             var geocoder;
             var map;
@@ -116,8 +117,8 @@
         <script>
             window.fbAsyncInit = function() {
                 FB.init({
-                    appId : '126494412964', // App ID
-                    channelUrl : '//localhost:8020/EddaMock/channel.html', // Channel File
+                    appId : '<appId>', // App ID
+                    channelUrl : '<channel file>', // Channel File
                     status : true, // check login status
                     cookie : true, // enable cookies to allow the server to access the session
                     xfbml : true // parse XFBML
@@ -128,7 +129,6 @@
                 FB.Event.subscribe('auth.authResponseChange', function(response) {
                     if (response.status === 'connected') {
                         $('#login').hide();
-
                         loadFriends(function(status) {
                             if (status !== "success") {
                                 console.log(status);
@@ -156,6 +156,8 @@
                     js.src = "//connect.facebook.net/en_US/all.js";
                     ref.parentNode.insertBefore(js, ref);
                 }(document));
+
+            Parse.initialize("<key>", "<key>");
 
             // Here we run a very simple test of the Graph API after login is successful.
             // This testAPI() function is only called in those cases.
