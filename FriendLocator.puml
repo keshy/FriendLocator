@@ -1,0 +1,36 @@
+@startuml
+
+title Friend Locator data flow
+
+participant "Facebook" as fb
+participant "Google Maps" as gm
+participant "Parse" as parse
+participant "Browser" as browser
+
+autonumber
+
+fb <- browser: login
+fb -> fb: authenticate user
+fb -> browser: login status
+
+fb -> fb: get friends list
+fb -> browser: <friends_list>
+
+loop for each friend
+    browser -> fb: get user data (current location, hometown...)
+    fb -> browser: <user_data>
+
+    browser -> parse: getFriendData
+    alt cache_hit
+        parse -> browser: <lat,long>
+        browser -> gm: plot_marker(lat,long)
+        gm -> browser: render marker(async)
+    else cache_miss
+        browser -> gm: getLatLongForCity(city)
+        gm -> browser: <geo_data>
+        browser -> gm: plot_marker(lat,long)
+        gm -> browser: render marker(async)
+        browser -> parse: update Friend info
+end
+end
+@enduml
